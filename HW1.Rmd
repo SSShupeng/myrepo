@@ -5,26 +5,31 @@ date: "2/5/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+#read the original bridge data and form a df called rawbridge
+rawBridge = read.csv("Bridge data.csv")
+#summary(rawBridge)
+#assign ID, year, fips, conditions as vecter "keep"
+colname = colnames(rawBridge)
+colname = colname[58:62]
+keep = c("STRUCTURE_NUMBER_008", "YEAR_BUILT_027","STATE_CODE_001", "COUNTY_CODE_003", "PLACE_CODE_004", colname)
+#create an df with required columns
+bridge=  rawBridge[keep]
+#change names of some columns for easier identification
+names(bridge)[names(bridge)== "STRUCTURE_NUMBER_008"] = "bridgeID"
+names(bridge)[names(bridge)== "YEAR_BUILT_027"] = "year"
+names(bridge)[names(bridge)== "COUNTY_CODE_003"] = "county"
+names(bridge)[names(bridge)== "PLACE_CODE_004"] = "place"
+names(bridge)[names(bridge)== "ROADWAY_WIDTH_MT_051"] = "roadWidth"
+names(bridge)[names(bridge)== "STATE_CODE_001"] = "state"
+names(bridge)[names(bridge)== "DECK_WIDTH_MT_052"] = "deckWidth"
+names(bridge)[names(bridge)== "RIGHT_CURB_MT_050B"] = "Conditions"
+names(bridge)[names(bridge)== "VERT_CLR_OVER_MT_053"] = "overMT"
+names(bridge)[names(bridge)== "VERT_CLR_UND_REF_054A"] = "underRef"
+#Display fisrt twenty rows of bridge data
+bridge[1:20,]
+#make a plot showing roadwidth on the y axis and year of the bridge on x axis
+plot(bridge[, 2], bridge[,7], xlab = "year made", ylab = "road width", pch = ".")
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
