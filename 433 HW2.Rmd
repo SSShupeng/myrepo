@@ -1,0 +1,56 @@
+---
+title: "433 HW2"
+author: "Shupeng Tang"
+date: "2/11/2021"
+output: github_document
+---
+
+```{r message=FALSE}
+library(nycflights13)
+library(dplyr)
+library(tidyverse)
+
+```
+
+
+```{r}
+#Question 1
+#count number of flights missing departure time
+sum(is.na(flights$dep_time))
+flights
+#for loop that outputs the names of colunms that have missing values
+for (i in 1:19) {
+ if(sum(is.na(flights[,i])) > 0) {print(colnames(flights[,i]))}
+}
+```
+**Question 1**
+There are total of 8225 flights missing dep_time. Other missing variables are "dep_delay", "arr_time", "arr_delay", "tailnum", "air_time". These missing variables might indicate that the flights are canceled, therefore they don't have a departure time. 
+
+```{r}
+#Question 2 
+df1 = mutate(new_dep_time = (((dep_time)/100)*60 +(dep_time)%%100 ), flights)
+df2 = mutate(new_sched_dep_time = ((sched_dep_time)/100)*60 + (sched_dep_time)%%100 , flights)
+new_times = data.frame(new_dep_time = df1$new_dep_time, new_sched_dep_time = df2$new_sched_dep_time)
+head(new_times)
+```
+
+
+```{r}
+#Question 3
+#filter out the flights that have na dep_time and form a new data frame
+df = filter(flights, is.na(flights$dep_time))
+
+#for loops that adds number of canceled flights each day to a dataframe containing the date and corresponding canceled numbers
+num_per_day = data.frame(dates = 1:30, num = 0)
+for (i in 1:30) {
+num_per_day$num [i]= (nrow(filter(df, df$day == i)) ) 
+}
+#scatterplot(num_per_day~dates)
+ggplot(aes(x=dates ,y=num), data = num_per_day) + geom_point()
+```
+
+**Question 3**
+
+From the plot above I don't see a clear pattern for flight cancellation, but we can see that the numbers canceled flights are unusually high when there are also large numbers of flights delayed, therefore proportion of canceled flights and delayed flights should be related.
+
+
